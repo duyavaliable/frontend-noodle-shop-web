@@ -1,0 +1,190 @@
+.products-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.products-title {
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+}
+
+.products-actions {
+  margin-bottom: 20px;
+  text-align: right;
+}
+
+.add-product-btn {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.add-product-btn:hover {
+  background-color: #218838;
+}
+
+.add-product-btn:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.loading-indicator {
+  text-align: center;
+  padding: 20px;
+  font-style: italic;
+  color: #6c757d;
+}
+
+.products-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.products-table th, 
+.products-table td {
+  border: 1px solid #dee2e6;
+  padding: 12px;
+  text-align: left;
+}
+
+.products-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+}
+
+.products-table tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+.actions-cell {
+  display: flex;
+  gap: 8px;
+}
+
+.edit-btn, 
+.delete-btn {
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.edit-btn {
+  background-color: #ffc107;
+  color: #212529;
+}
+
+.edit-btn:hover {
+  background-color: #e0a800;
+}
+
+.delete-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #c82333;
+}
+
+.edit-btn:disabled, 
+.delete-btn:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.product-form-container {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+}
+
+.product-form {
+  display: grid;
+  gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.form-group input, 
+.form-group textarea, 
+.form-group select {
+  padding: 8px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.submit-btn, 
+.cancel-btn {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.submit-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.submit-btn:hover {
+  background-color: #0069d9;
+}
+
+.cancel-btn {
+  background-color: #6c757d;
+  color: white;
+}
+
+.cancel-btn:hover {
+  background-color: #5a6268;
+}
+
+.submit-btn:disabled, 
+.cancel-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.product-thumbnail {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 4px;
+}

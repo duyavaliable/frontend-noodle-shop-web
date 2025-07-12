@@ -6,6 +6,7 @@ import { AuthContext,AuthProvider } from './context/AuthContext';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import Category from './pages/Category';
+import Products from './pages/Products';
 import AdminDashboard from './pages/AdminDashboard';
 import UserDashboard from './pages/UserDashboard';
 
@@ -93,6 +94,15 @@ function App() {
             element={
               <AdminOrStaffRoute>
                 <Category />
+              </AdminOrStaffRoute>
+            } 
+          />
+
+          <Route 
+            path="/products" 
+            element={
+              <AdminOrStaffRoute>
+                <Products />
               </AdminOrStaffRoute>
             } 
           />

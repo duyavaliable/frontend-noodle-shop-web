@@ -59,7 +59,7 @@ const AdminDashboard = () => {
             <li>
               <Link to="/products">
                 <span className="icon">🍜</span>
-                Quản lý sản phẩm
+                Quản lý món ăn
               </Link>
             </li>
             
@@ -115,7 +115,7 @@ const AdminDashboard = () => {
             </div>
             
             <div className="stat-card">
-              <h3>Sản phẩm</h3>
+              <h3>Món ăn</h3>
               <p className="stat-value">0</p>
             </div>
             
@@ -139,7 +139,7 @@ const AdminDashboard = () => {
               </Link>
               <Link to="/products" className="action-button">
                 <span className="action-icon">🍜</span>
-                Quản lý sản phẩm
+                Quản lý món ăn
               </Link>
               <Link to="/orders" className="action-button">
                 <span className="action-icon">📦</span>
