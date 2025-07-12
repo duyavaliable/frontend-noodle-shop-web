@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect} from 'react';
 import { categoryService } from '../services/api';
+// import { AuthContext } from '../context/AuthContext';
 import '../style/Categories.css';
 
 const Categories = () => {
@@ -13,6 +14,9 @@ const Categories = () => {
   });
   const [isAdding, setIsAdding] = useState(false);
 
+  // // Get current user from AuthContext
+  // const { currentUser } = useContext(AuthContext);
+  
   // Load categories on component mount
   useEffect(() => {
     fetchCategories();

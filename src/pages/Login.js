@@ -28,10 +28,16 @@ const Login = () => {
       const data = await authService.login(username, password);
       
       // Lưu dữ liệu người dùng vào context
-      login({ username, userId: data.userId });
+      login({ username, userId: data.userId, role: data.role, token: data.token });
+
+      // Redirect based on role (dang nhap trang dua vao vai tro)
+      if (data.role === 'admin' || data.role === 'staff') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/dashboard'); // Redirect to home for regular users
+      }
       
-      // Chuyển hướng về trang chủ hoặc bảng điều khiển
-      navigate('/');
+
     } catch (err) {
       setError(err.response?.data?.message || 'Đăng nhập thất bại. Vui lòng kiểm tra thông tin đăng nhập.');
     } finally {
