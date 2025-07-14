@@ -8,6 +8,7 @@ const Products = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [editingId, setEditingId] = useState(null);
+  const DEFAULT_IMAGE = "./public/defaultimage.png";
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -269,7 +270,7 @@ const Products = () => {
             <table className="products-table">
               <thead>
                 <tr>
-                  <th>ID</th>
+                  <th>STT</th>
                   <th>Hình ảnh</th>
                   <th>Tên món</th>
                   <th>Mô tả</th>
@@ -279,9 +280,9 @@ const Products = () => {
                 </tr>
               </thead>
               <tbody>
-                {products.map((product) => (
+                {products.map((product, index) => (
                   <tr key={product.id}>
-                    <td>{product.id}</td>
+                    <td>{index+1}</td>
                     <td>
                       {product.image_url ? (
                         <img 
@@ -290,13 +291,13 @@ const Products = () => {
                           className="product-thumbnail" 
                           onError={(e) => {
                             e.target.onerror = null;
-                            e.target.src = 'https://via.placeholder.com/50?text=No+Image';
+                            e.target.src = DEFAULT_IMAGE;
                           }}
                         />
                       ) : (
                         <img 
-                          src="https://via.placeholder.com/50?text=No+Image" 
-                          alt="No Image" 
+                          src={DEFAULT_IMAGE}
+                          alt="Khong co anh" 
                           className="product-thumbnail"
                         />
                       )}
