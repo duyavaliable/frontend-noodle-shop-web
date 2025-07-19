@@ -9,6 +9,10 @@ import Category from './pages/Category';
 import Products from './pages/Products';
 import AdminDashboard from './pages/AdminDashboard';
 import UserDashboard from './pages/UserDashboard';
+import Cart from './pages/Cart';
+import Orders from './pages/Orders';
+import OrderSuccess from './pages/OrdersSuccsess';
+import Menu from './pages/Menu';
 
 
 // // Protected Route component (chi cho phep user da dang nhap truy cap)
@@ -122,14 +126,8 @@ function App() {
             }
           />
 
-          <Route 
-            path="/cart" 
-            element={
-              <UserRoute>
-                <UserDashboard />
-              </UserRoute>
-            }
-          />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/order-success" element={<OrderSuccess />} />
 
           <Route 
             path="/user/orders" 
