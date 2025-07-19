@@ -59,9 +59,9 @@ const AdminOrStaffRoute = ({ children }) => {
 // Hàm điều hướng dựa vào role của user
 const HomeRedirect = () => {
   const { currentUser } = useContext(AuthContext);
-  
-  if (!currentUser) return <Navigate to="/login" />;
-  
+
+  if (!currentUser) return <UserDashboard />;
+
   if (currentUser.role === 'admin' || currentUser.role === 'staff') {
     return <Navigate to="/admin/dashboard" />;
   } else {
@@ -74,10 +74,15 @@ function App() {
     <AuthProvider>
       <Router>
         <Routes>
+          <Route path="/" element={<HomeRedirect />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/admin/signup" element={<SignUp />} />
           <Route path="/staff/signup" element={<SignUp />} />
+
+          {/* Public Routes */}
+          <Route path="/" element={<UserDashboard />} />
+          <Route path="/menu" element={<UserDashboard />} />
 
           {/* Protected Routes for Admin and Staff */}
           <Route 
@@ -117,8 +122,32 @@ function App() {
             }
           />
 
-          {/* Redirect based on role */}
-          <Route path="/" element={<HomeRedirect />} />
+          <Route 
+            path="/cart" 
+            element={
+              <UserRoute>
+                <UserDashboard />
+              </UserRoute>
+            }
+          />
+
+          <Route 
+            path="/user/orders" 
+            element={
+              <UserRoute>
+                <UserDashboard />
+              </UserRoute>
+            }
+          />
+
+          <Route 
+            path="/user/profile" 
+            element={
+              <UserRoute>
+                <UserDashboard />
+              </UserRoute>
+            }
+          />
         </Routes>
       </Router>
     </AuthProvider>

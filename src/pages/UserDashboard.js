@@ -10,11 +10,13 @@ const UserDashboard = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const DEFAULT_IMAGE = "./public/defaultimage.png";
+  const DEFAULT_IMAGE = "/defaultimage.png";
 
   // Xử lý đăng xuất
   const handleLogout = () => {
-    logout();
+    if (currentUser) {
+      logout();
+    }
     navigate('/login');
   };
 
@@ -27,6 +29,17 @@ const UserDashboard = () => {
   const formatPrice = (price) => {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
   };
+
+  //Xu ly khi nguoi dung chua dang nhap
+  const handleOrderClick = (e) => {
+    if (!currentUser) {
+      e.preventDefault();
+      alert("Vui lòng đăng nhập để đặt hàng.");
+      navigate('/login');
+    }
+  };
+
+
   // Lấy danh sách sản phẩm khi component được mount 
   //lay 4 san pham bat ki trong co so du lieu
   useEffect(() => {
@@ -57,15 +70,24 @@ const UserDashboard = () => {
         </div>
         
         <div className="user-info">
-          <div className="avatar">
-            {currentUser?.username?.charAt(0).toUpperCase() || 'U'}
-          </div>
-          <div className="user-details">
-            <p className="username">{currentUser?.username || 'User'}</p>
+          {currentUser ? (
+            <>
+              <div className="avatar">
+                {currentUser?.username?.charAt(0).toUpperCase()}
+              </div>
+              <div className="user-details">
+            <p className="username">{currentUser.username}</p>
             <p className="role">Khách hàng</p>
           </div>
+        </>
+          ): (
+            <div className="guest-info">
+              <Link to="/login" className="login-link">Đăng nhập</Link>
+              <Link to="/register" className="register-link">Đăng ký</Link>
+            </div>
+          )}
         </div>
-        
+
         <nav className="sidebar-menu">
           <ul>
             <li>
@@ -83,12 +105,14 @@ const UserDashboard = () => {
             </li>
             
             <li>
-              <Link to="/cart">
+              <Link to="/cart" onClick={handleOrderClick}>
                 <span className="icon">🛒</span>
-                Giỏ hàng
+                Giỏ hàng {!currentUser && <span className="lock-icon">🔒</span>}
               </Link>
             </li>
             
+            {currentUser && (
+            <>
             <li>
               <Link to="/user/orders">
                 <span className="icon">📦</span>
@@ -109,9 +133,20 @@ const UserDashboard = () => {
                 Đăng xuất
               </button>
             </li>
-          </ul>
-        </nav>
-      </div>
+          </>
+        )}
+        
+        {!currentUser && (
+          <li>
+            <Link to="/login" className="login-button">
+            <span className="icon">🔑</span>
+              Đăng nhập
+            </Link>
+          </li>
+        )}
+      </ul>
+    </nav>
+  </div>
       
       <div className="main-content">
         <header className="dashboard-header">
@@ -121,7 +156,7 @@ const UserDashboard = () => {
         
         <div className="dashboard-content">
           <div className="welcome-card">
-            <h2>Xin chào, {currentUser?.username || 'User'}!</h2>
+            <h2>Xin chào, {currentUser?.username || 'Quý Khách'}!</h2>
             <p>Chào mừng đến với Bán Mì. Chúng tôi rất vui khi được phục vụ bạn.</p>
           </div>
           
@@ -149,7 +184,9 @@ const UserDashboard = () => {
                       {product.description || 'Không có mô tả'}
                     </p>
                     <p className="product-price">{formatPrice(product.price)}</p>
-                    <Link to="/menu" className="view-menu-btn">Xem thực đơn</Link>
+                    <Link to={currentUser ? "/menu" : "/login"} className="view-menu-btn">
+                      {currentUser ? "Xem thực đơn" : "Đăng nhập để xem"}
+                    </Link>
                   </div>
                 ))
               ) : (
@@ -171,14 +208,18 @@ const UserDashboard = () => {
               <div className="action-icon">📦</div>
               <h3>Đơn hàng của tôi</h3>
               <p>Theo dõi trạng thái và lịch sử đơn hàng của bạn</p>
-              <Link to="/user/orders" className="action-btn">Xem đơn hàng</Link>
+              <Link to={currentUser ? "/user/orders" : "/login"} className="action-btn">
+                {currentUser ? "Xem đơn hàng" : "Đăng nhập để xem"}
+              </Link>
             </div>
             
             <div className="action-card">
               <div className="action-icon">👤</div>
               <h3>Thông tin cá nhân</h3>
               <p>Cập nhật thông tin cá nhân và địa chỉ giao hàng</p>
-              <Link to="/user/profile" className="action-btn">Cập nhật</Link>
+              <Link to={currentUser ? "/user/profile" : "/login"} className="action-btn">
+                {currentUser ? "Cập nhật" : "Đăng nhập để xem"}
+              </Link>
             </div>
           </div>
         </div>
