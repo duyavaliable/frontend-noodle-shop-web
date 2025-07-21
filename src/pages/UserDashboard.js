@@ -91,7 +91,7 @@ const UserDashboard = () => {
         <nav className="sidebar-menu">
           <ul>
             <li>
-              <Link to="/user/dashboard">
+              <Link to="/dashboard">
                 <span className="icon">📊</span>
                 Trang chủ
               </Link>

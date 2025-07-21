@@ -11,6 +11,7 @@ const Menu = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [cartCount, setCartCount] = useState(0);
   const DEFAULT_IMAGE = "/defaultimage.png";
 
   // Lấy danh sách sản phẩm và danh mục khi component mount
@@ -35,7 +36,15 @@ const Menu = () => {
     };
 
     fetchData();
+    updateCartCount();
   }, []);
+
+  // Cập nhật số lượng sản phẩm trong giỏ hàng
+  const updateCartCount = () => {
+    const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+    const count = cartItems.reduce((total, item) => total + item.quantity, 0);
+    setCartCount(count);
+  };
 
   // Lọc sản phẩm theo danh mục
   const filteredProducts = selectedCategory === 'all' 
@@ -73,6 +82,9 @@ const Menu = () => {
       // Lưu giỏ hàng cập nhật vào localStorage
       localStorage.setItem('cart', JSON.stringify(cartItems));
       
+      // Cập nhật số lượng sản phẩm trong giỏ hàng
+      updateCartCount();
+      
       alert(`Đã thêm ${product.name} vào giỏ hàng!`);
     } catch (error) {
       console.error("Lỗi khi thêm vào giỏ hàng:", error);
@@ -82,7 +94,20 @@ const Menu = () => {
 
   return (
     <div className="menu-container">
-      <h1 className="menu-title">Thực đơn</h1>
+      <header className="menu-header">
+        <h1 className="menu-title">Thực đơn</h1>
+        <div className="menu-nav">
+          <Link to="/" className="menu-nav-link">Trang chủ</Link>
+          {currentUser ? (
+            <Link to="/dashboard" className="menu-nav-link">Trang cá nhân</Link>
+          ) : (
+            <Link to="/login" className="menu-nav-link">Đăng nhập</Link>
+          )}
+          <Link to="/cart" className="menu-nav-link">
+            Giỏ hàng ({cartCount})
+          </Link>
+        </div>
+      </header>
       
       {error && <div className="error-message">{error}</div>}
       
@@ -144,7 +169,7 @@ const Menu = () => {
       
       <div className="cart-preview">
         <Link to="/cart" className="view-cart-btn">
-          🛒 Xem giỏ hàng
+          🛒 Xem giỏ hàng {cartCount > 0 && <span className="cart-count">({cartCount})</span>}
         </Link>
       </div>
     </div>

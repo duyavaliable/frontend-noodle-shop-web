@@ -85,8 +85,7 @@ function App() {
           <Route path="/staff/signup" element={<SignUp />} />
 
           {/* Public Routes */}
-          <Route path="/" element={<UserDashboard />} />
-          <Route path="/menu" element={<UserDashboard />} />
+          <Route path="/menu" element={<Menu />} />
 
           {/* Protected Routes for Admin and Staff */}
           <Route 
