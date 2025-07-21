@@ -138,7 +138,17 @@ export const orderService = {
 
   // Get orders of current user
   getMyOrders: async () => {
-    const response = await api.get('/orders/my-orders');
+  const userData = JSON.parse(localStorage.getItem('user'));
+    if (!userData) {
+      throw new Error('Chưa đăng nhập');
+    }
+    const response = await api.get(`/orders/user/${userData.id}`);
+    return response.data;
+  },
+
+  // Phương thức để lấy chi tiết đơn hàng
+  getOrderById: async (id) => {
+    const response = await api.get(`/orders/${id}`);
     return response.data;
   },
 

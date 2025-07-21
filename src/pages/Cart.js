@@ -86,6 +86,7 @@ const Cart = () => {
         customer_name: shippingInfo.customer_name,
         customer_phone: shippingInfo.customer_phone,
         shipping_address: shippingInfo.shipping_address,
+        user_id: currentUser.id, 
         order_items: cartItems.map(item => ({
           product_id: item.id,
           quantity: item.quantity,

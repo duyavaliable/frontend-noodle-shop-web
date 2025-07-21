@@ -13,6 +13,7 @@ import Cart from './pages/Cart';
 import Orders from './pages/Orders';
 import OrderSuccess from './pages/OrdersSuccsess';
 import Menu from './pages/Menu';
+import MyOrders from './pages/Orders';
 
 
 // // Protected Route component (chi cho phep user da dang nhap truy cap)
@@ -132,7 +133,7 @@ function App() {
             path="/user/orders" 
             element={
               <UserRoute>
-                <UserDashboard />
+                <MyOrders />
               </UserRoute>
             }
           />
