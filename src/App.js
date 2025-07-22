@@ -10,10 +10,10 @@ import Products from './pages/Products';
 import AdminDashboard from './pages/AdminDashboard';
 import UserDashboard from './pages/UserDashboard';
 import Cart from './pages/Cart';
-import Orders from './pages/Orders';
 import OrderSuccess from './pages/OrdersSuccsess';
 import Menu from './pages/Menu';
 import MyOrders from './pages/Orders';
+import AdminOrders from './pages/AdminOrders';
 
 
 // // Protected Route component (chi cho phep user da dang nhap truy cap)
@@ -115,6 +115,16 @@ function App() {
               </AdminOrStaffRoute>
             } 
           />
+
+          <Route 
+            path="/admin/orders" 
+            element={
+              <AdminOrStaffRoute>
+                <AdminOrders />
+              </AdminOrStaffRoute>
+            } 
+          />
+
           
           {/* Protected Routes for Regular Users */}
           <Route 

@@ -64,7 +64,7 @@ const AdminDashboard = () => {
             </li>
             
             <li>
-              <Link to="/orders">
+              <Link to="/admin/orders">
                 <span className="icon">📦</span>
                 Quản lý đơn hàng
               </Link>
@@ -141,7 +141,7 @@ const AdminDashboard = () => {
                 <span className="action-icon">🍜</span>
                 Quản lý món ăn
               </Link>
-              <Link to="/orders" className="action-button">
+              <Link to="/admin/orders" className="action-button">
                 <span className="action-icon">📦</span>
                 Quản lý đơn hàng
               </Link>

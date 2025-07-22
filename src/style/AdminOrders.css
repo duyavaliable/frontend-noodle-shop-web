@@ -1,0 +1,259 @@
+.admin-orders-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.filter-container {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.filter-container label {
+  margin-right: 10px;
+  font-weight: 500;
+}
+
+.filter-container select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+  font-size: 14px;
+}
+
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.orders-table th, 
+.orders-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.orders-table th {
+  background-color: #f4f4f4;
+  font-weight: 600;
+}
+
+.actions-cell {
+  display: flex;
+  gap: 8px;
+}
+
+.view-btn, .delete-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.view-btn {
+  background-color: #4b6bfb;
+  color: white;
+}
+
+.view-btn:hover {
+  background-color: #3651d3;
+}
+
+.delete-btn {
+  background-color: #ff4d4d;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #e63939;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.order-status {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-processing {
+  background-color: #ffcf40;
+  color: #806000;
+}
+
+.status-confirmed {
+  background-color: #90caf9;
+  color: #0d47a1;
+}
+
+.status-shipping {
+  background-color: #81c784;
+  color: #1b5e20;
+}
+
+.status-delivered {
+  background-color: #a5d6a7;
+  color: #1b5e20;
+}
+
+.status-canceled {
+  background-color: #ef9a9a;
+  color: #b71c1c;
+}
+
+.order-details-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.close-modal {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+}
+
+.order-info {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.order-info-row {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.order-info-group, .order-status-group {
+  flex: 1;
+  min-width: 250px;
+}
+
+.update-status {
+  margin-top: 10px;
+}
+
+.update-status label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.update-status select {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 100%;
+  max-width: 250px;
+}
+
+.order-items-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 15px 0;
+}
+
+.order-items-table th,
+.order-items-table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.order-items-table thead th {
+  background-color: #f4f4f4;
+}
+
+.order-items-table tfoot {
+  font-weight: bold;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.close-btn {
+  padding: 8px 16px;
+  background-color: #f4f4f4;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.empty-orders {
+  text-align: center;
+  padding: 30px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+}
+
+.loading-indicator {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+}
+
+.error-message {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 10px 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .order-info-row {
+    flex-direction: column;
+  }
+  
+  .orders-table {
+    font-size: 14px;
+  }
+  
+  .actions-cell {
+    flex-direction: column;
+  }
+}
