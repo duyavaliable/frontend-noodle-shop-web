@@ -18,7 +18,7 @@ const MyOrders = () => {
       try {
         setLoading(true);
         // Gọi API để lấy đơn hàng của người dùng hiện tại
-        const response = await orderService.getMyOrders();
+        const response = await orderService.getMyOrders(currentUser.userId);
         setOrders(response);
         setError('');
       } catch (err) {

@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useContext} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import {orderService} from '../services/api';
+import api, {orderService} from '../services/api';
 import '../style/Cart.css';
 
 const Cart = () => {
@@ -16,18 +16,25 @@ const Cart = () => {
         shipping_address: '',
     });
     
-// Giả lập lấy giỏ hàng từ localStorage
-  useEffect(() => {
-    const storedCart = localStorage.getItem('cart');
-    if (storedCart) {
-      try {
-        setCartItems(JSON.parse(storedCart));
-      } catch (e) {
-        console.error("Lỗi khi đọc giỏ hàng từ localStorage:", e);
-        setCartItems([]);
-      }
-    }
-  }, []);
+// Giả lập lấy giỏ hàng
+useEffect(() => {
+        const fetchCart = async () => {
+            if (currentUser) {
+                setLoading(true);
+                try {
+                    const response = await api.get(`/cart/user/${currentUser.userId}`);
+                    // Backend trả về { cart, items }, chúng ta cần `items`
+                    setCartItems(response.data.items || []);
+                } catch (err) {
+                    console.error("Lỗi khi tải giỏ hàng:", err);
+                    setError("Không thể tải giỏ hàng. Vui lòng thử lại.");
+                } finally {
+                    setLoading(false);
+                }
+            }
+        };
+        fetchCart();
+    }, [currentUser]);
 
   // Tính tổng tiền đơn hàng
   const calculateTotal = () => {
@@ -35,21 +42,31 @@ const Cart = () => {
   };
 
   // Xử lý khi số lượng thay đổi
-  const handleQuantityChange = (productId, newQuantity) => {
+  const handleQuantityChange = async (cartItemId, newQuantity) => {
     if (newQuantity < 1) return;
-
-    const updatedCart = cartItems.map(item =>
-      item.id === productId ? { ...item, quantity: newQuantity } : item
-    );
-    setCartItems(updatedCart);
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
+    try {
+      await api.put(`/cart/items/${cartItemId}`, { quantity: newQuantity });
+      // Cập nhật giỏ hàng trong state
+      const updatedCart = cartItems.map(item =>
+        item.cart_item_id === cartItemId ? { ...item, quantity: newQuantity } : item
+      );
+      setCartItems(updatedCart);
+    } catch (err) {
+      console.error("Lỗi khi cập nhật giỏ hàng:", err);
+      setError("Không thể cập nhật giỏ hàng. Vui lòng thử lại.");
+    }
   };
 
   // Xóa sản phẩm khỏi giỏ hàng
-  const handleRemoveItem = (productId) => {
-    const updatedCart = cartItems.filter(item => item.id !== productId);
-    setCartItems(updatedCart);
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
+  const handleRemoveItem = async (cartItemId) => {
+    try {
+      await api.delete(`/cart/items/${cartItemId}`);
+      const updatedCart = cartItems.filter(item => item.cart_item_id !== cartItemId);
+      setCartItems(updatedCart);
+    } catch (err) {
+      console.error("Lỗi khi xóa sản phẩm khỏi giỏ hàng:", err);
+      setError("Không thể xóa sản phẩm khỏi giỏ hàng. Vui lòng thử lại.");
+    }
   };
 
   // Xử lý thay đổi thông tin giao hàng
@@ -86,9 +103,9 @@ const Cart = () => {
         customer_name: shippingInfo.customer_name,
         customer_phone: shippingInfo.customer_phone,
         shipping_address: shippingInfo.shipping_address,
-        user_id: currentUser.id, 
+        user_id: currentUser.userId, 
         order_items: cartItems.map(item => ({
-          product_id: item.id,
+          product_id: item.product_id,
           quantity: item.quantity,
           price: item.price
         }))
@@ -98,7 +115,7 @@ const Cart = () => {
       const response = await orderService.createOrder(orderData);
       
       // Xóa giỏ hàng sau khi đặt hàng thành công
-      localStorage.removeItem('cart');
+      await api.delete(`/cart/user/${currentUser.userId}`);
       setCartItems([]);
       
       // Chuyển hướng đến trang cảm ơn hoặc trang chi tiết đơn hàng
@@ -143,7 +160,7 @@ const Cart = () => {
               </thead>
               <tbody>
                 {cartItems.map(item => (
-                  <tr key={item.id}>
+                  <tr key={item.cart_item_id}>
                     <td>
                       <div className="cart-item-info">
                         <img 
@@ -162,13 +179,13 @@ const Cart = () => {
                     <td>
                       <div className="quantity-control">
                         <button 
-                          onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+                          onClick={() => handleQuantityChange(item.cart_item_id, item.quantity - 1)}
                           disabled={item.quantity <= 1}
                         >
                           -
                         </button>
                         <span>{item.quantity}</span>
-                        <button onClick={() => handleQuantityChange(item.id, item.quantity + 1)}>
+                        <button onClick={() => handleQuantityChange(item.cart_item_id, item.quantity + 1)}>
                           +
                         </button>
                       </div>
@@ -177,7 +194,7 @@ const Cart = () => {
                     <td>
                       <button 
                         className="remove-item-btn" 
-                        onClick={() => handleRemoveItem(item.id)}
+                        onClick={() => handleRemoveItem(item.cart_item_id)}
                       >
                         ×
                       </button>

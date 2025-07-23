@@ -138,13 +138,13 @@ export const orderService = {
 
   // Get orders of current user
   getMyOrders: async () => {
-    const userData = JSON.parse(localStorage.getItem('user'));
-      if (!userData || !userData.userId) {
-        throw new Error('Không tìm thấy thông tin người dùng');
-      }
-      const response = await api.get(`/orders/user/${userData.userId}`);
-      return response.data;
-    },
+    const userId = JSON.parse(localStorage.getItem('user'))?.userId;
+    if (!userId) {
+      throw new Error('Cần cung cấp ID người dùng');
+    }
+    const response = await api.get(`/orders/user/${userId}`);
+    return response.data;
+  },
 
   // Create new order
   createOrder: async (orderData) => {

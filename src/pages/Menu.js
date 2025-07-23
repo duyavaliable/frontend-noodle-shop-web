@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { productService, categoryService } from '../services/api';
+import api, { productService, categoryService } from '../services/api';
 import '../style/Menu.css';
 
 const Menu = () => {
@@ -13,6 +13,25 @@ const Menu = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [cartCount, setCartCount] = useState(0);
   const DEFAULT_IMAGE = "/defaultimage.png";
+  
+  // Cập nhật số lượng sản phẩm trong giỏ hàng
+  const updateCartCount = useCallback(async () => {
+    if (currentUser) {
+      try {
+        const response = await api.get(`/cart/user/${currentUser.userId}`);
+        const cartData = response.data;
+        
+        // Tính tổng số lượng từ items trả về từ API
+        const count = cartData.items?.reduce((total, item) => total + item.quantity, 0) || 0;
+        setCartCount(count);
+      } catch (error) {
+        console.error("Lỗi khi lấy thông tin giỏ hàng:", error);
+        setCartCount(0);
+      }
+    } else {
+      setCartCount(0);
+    }
+  }, [currentUser]);
 
   // Lấy danh sách sản phẩm và danh mục khi component mount
   useEffect(() => {
@@ -37,19 +56,8 @@ const Menu = () => {
 
     fetchData();
     updateCartCount();
-  }, []);
+  }, [updateCartCount]);
 
-  // Cập nhật số lượng sản phẩm trong giỏ hàng
-  const updateCartCount = () => {
-    const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
-    const count = cartItems.reduce((total, item) => total + item.quantity, 0);
-    setCartCount(count);
-  };
-
-  // Lọc sản phẩm theo danh mục
-  const filteredProducts = selectedCategory === 'all' 
-    ? products 
-    : products.filter(product => product.category_id === parseInt(selectedCategory));
 
   // Format giá tiền
   const formatPrice = (price) => {
@@ -57,40 +65,35 @@ const Menu = () => {
   };
 
   // Thêm sản phẩm vào giỏ hàng
-  const addToCart = (product) => {
+  const addToCart = async (product) => {
     try {
-      // Lấy giỏ hàng từ localStorage
-      const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+      if (currentUser) {
       
-      // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
-      const existingItemIndex = cartItems.findIndex(item => item.id === product.id);
-      
-      if (existingItemIndex !== -1) {
-        // Nếu đã có, tăng số lượng
-        cartItems[existingItemIndex].quantity += 1;
-      } else {
-        // Nếu chưa có, thêm mới với số lượng là 1
-        cartItems.push({
-          id: product.id,
-          name: product.name,
-          price: product.price,
-          image_url: product.image_url,
+        // Gọi API để thêm vào giỏ hàng
+        await api.post(`/cart/user/${currentUser.userId}/items`, {
+          productId: product.id,
           quantity: 1
         });
+        // Cập nhật số lượng sản phẩm trong giỏ hàng
+        updateCartCount();
+        
+        alert(`Đã thêm ${product.name} vào giỏ hàng!`);
+      } else {
+        alert("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng.");
       }
-      
-      // Lưu giỏ hàng cập nhật vào localStorage
-      localStorage.setItem('cart', JSON.stringify(cartItems));
-      
-      // Cập nhật số lượng sản phẩm trong giỏ hàng
-      updateCartCount();
-      
-      alert(`Đã thêm ${product.name} vào giỏ hàng!`);
     } catch (error) {
       console.error("Lỗi khi thêm vào giỏ hàng:", error);
       alert("Không thể thêm vào giỏ hàng. Vui lòng thử lại.");
     }
   };
+
+  // Lọc sản phẩm theo danh mục đã chọn
+  const filteredProducts = products.filter(product => {
+    if (selectedCategory === 'all') {
+      return true;
+    }
+    return product.category_id.toString() === selectedCategory; 
+  });
 
   return (
     <div className="menu-container">
