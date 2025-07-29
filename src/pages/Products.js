@@ -19,17 +19,41 @@ const Products = () => {
   const [isAdding, setIsAdding] = useState(false);
   
   // Load products và categories khi component mount
-  useEffect(() => {
-    fetchProducts();
-    fetchCategories();
-  }, []);
+ useEffect(() => {
+  const fetchAll = async () => {
+    setLoading(true);
+    try {
+      const categoriesData = await categoryService.getAllCategories();
+      setCategories(categoriesData);
+
+      const productsData = await productService.getAllProducts();
+      const productsWithCategory = productsData.map(product => ({
+        ...product,
+        categoryName: categoriesData.find(cat => cat.id === product.category_id)?.name || 'Không có danh mục'
+      }));
+      setProducts(productsWithCategory);
+      setError('');
+    } catch (err) {
+      setError('Không thể tải dữ liệu');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchAll();
+}, []);
 
   // Fetch tất cả sản phẩm
   const fetchProducts = async () => {
     setLoading(true);
     try {
       const data = await productService.getAllProducts();
-      setProducts(data);
+      //anh xa ten danh muc vao san pham
+      const productsWithCategory = data.map(product => ({
+        ...product,
+        categoryName: categories.find(cat => cat.id === product.category_id)?.name || 'Không có danh mục'
+      }));
+      setProducts(productsWithCategory);
       setError('');
     } catch (err) {
       setError('Không thể tải danh sách món ăn');
@@ -65,7 +89,7 @@ const Products = () => {
       name: '', 
       description: '', 
       price: '', 
-      category_id: '', 
+      category_id: categories.length > 0 ? categories[0].id : '', 
       image_url: '' 
     });
     setIsAdding(true);
