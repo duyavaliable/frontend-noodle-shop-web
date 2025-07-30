@@ -28,7 +28,7 @@ const Login = () => {
       const data = await authService.login(username, password);
       
       // Lưu dữ liệu người dùng vào context
-      login({ username, userId: data.userId, role: data.role, token: data.token });
+      login({ username, userId: data.userId,email: data.email, role: data.role, token: data.token });
 
       // Redirect based on role (dang nhap trang dua vao vai tro)
       if (data.role === 'admin' || data.role === 'staff') {

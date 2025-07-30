@@ -36,11 +36,35 @@ const UserProfile = () => {
     setLoading(true);
     setError('');
     setSuccess('');
+    
+    //cap nhat thong tin nguoi dung hop le
+    const usernameRegex = /^[A-Za-zÀ-ỹà-ỹ\s]+$/;
+    if (!usernameRegex.test(formData.username)) {
+      setError('Tên đăng nhập chỉ được chứa chữ cái và khoảng trắng, không có số hoặc ký tự đặc biệt.');
+      setLoading(false);
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setError('Email không hợp lệ.');
+      setLoading(false);
+      return;
+    }
+    const phoneRegex = /^\d{9,11}$/;
+    if (formData.phone_number && !phoneRegex.test(formData.phone_number)) {
+      setError('Số điện thoại phải là số và có từ 9 đến 11 chữ số.');
+      setLoading(false);
+      return;
+    }
+
     try {
       await api.put(`/auth/update/${currentUser.userId}`, formData);
       setSuccess('Cập nhật thông tin thành công!');
       // Cập nhật lại context nếu cần
       login({ ...currentUser, ...formData });
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     } catch (err) {
       setError(err.response?.data?.error || 'Cập nhật thất bại');
     } finally {
@@ -50,7 +74,10 @@ const UserProfile = () => {
 
   return (
     <div className="user-profile-container">
-      <h1>Cập nhật thông tin cá nhân</h1>
+      <h1>Thông tin cá nhân</h1>
+      {(currentUser?.role === 'admin' || currentUser?.role === 'staff') && (
+      <p><strong>Vai trò:</strong> {currentUser.role === 'admin' ? 'Quản trị viên' : 'Nhân viên'}</p>
+      )}
       {error && <div className="error-message">{error}</div>}
       {success && <div className="success-message">{success}</div>}
       <form onSubmit={handleSubmit} className="user-profile-form">
@@ -86,7 +113,6 @@ const UserProfile = () => {
             name="phone_number"
             value={formData.phone_number}
             onChange={handleChange}
-            disabled={loading}
           />
         </div>
         <button type="submit" className="submit-btn" disabled={loading}>

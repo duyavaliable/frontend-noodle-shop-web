@@ -17,20 +17,7 @@ import AdminOrders from './pages/AdminOrders';
 import UserProfile from './pages/UserProfile';
 
 
-// // Protected Route component (chi cho phep user da dang nhap truy cap)
-// const ProtectedRoute = ({ children }) => {
-//   const { currentUser, loading } = useContext(AuthContext);
-  
-//   if (loading) {
-//     return <div>Loading...</div>;
-//   }
-  
-//   if (!currentUser) {
-//     return <Navigate to="/login" />;
-//   }
-  
-//   return children;
-// };
+
 
 // User Route component (chi cho phep nguoi dung thuong truy cap)
 const UserRoute = ({ children }) => {
@@ -86,6 +73,7 @@ function App() {
           <Route path="/admin/signup" element={<SignUp />} />
           <Route path="/staff/signup" element={<SignUp />} />
           <Route path="/user/profile" element={<UserProfile />} />
+          <Route path="/admin/profile" element={<UserProfile />} />
 
           {/* Public Routes */}
           <Route path="/menu" element={<Menu />} />
@@ -127,7 +115,15 @@ function App() {
             } 
           />
 
-          
+          <Route 
+            path="/admin/profiles" 
+            element={
+              <AdminOrStaffRoute>
+                <UserDashboard />
+              </AdminOrStaffRoute>
+            }
+          />
+
           {/* Protected Routes for Regular Users */}
           <Route 
             path="/dashboard" 

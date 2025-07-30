@@ -72,7 +72,7 @@ const AdminDashboard = () => {
             
             {isAdmin && (
               <li>
-                <Link to="/users">
+                <Link to="/admin/profiles">
                   <span className="icon">👥</span>
                   Quản lý người dùng
                 </Link>
@@ -146,7 +146,7 @@ const AdminDashboard = () => {
                 Quản lý đơn hàng
               </Link>
               {isAdmin && (
-                <Link to="/users" className="action-button">
+                <Link to="/admin/profiles" className="action-button">
                   <span className="action-icon">👥</span>
                   Quản lý người dùng
                 </Link>
