@@ -14,6 +14,7 @@ import OrderSuccess from './pages/OrdersSuccsess';
 import Menu from './pages/Menu';
 import MyOrders from './pages/Orders';
 import AdminOrders from './pages/AdminOrders';
+import UserProfile from './pages/UserProfile';
 
 
 // // Protected Route component (chi cho phep user da dang nhap truy cap)
@@ -84,6 +85,7 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/admin/signup" element={<SignUp />} />
           <Route path="/staff/signup" element={<SignUp />} />
+          <Route path="/user/profile" element={<UserProfile />} />
 
           {/* Public Routes */}
           <Route path="/menu" element={<Menu />} />
