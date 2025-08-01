@@ -18,7 +18,7 @@ const UserDashboard = () => {
       logout();
     }
     navigate('/login');
-  };
+  }
 
   // Toggle menu trên thiết bị di động
   const toggleMenu = () => {
@@ -63,108 +63,115 @@ const UserDashboard = () => {
 
   return (
     <div className="dashboard-container">
-      <div className={`sidebar ${menuOpen ? 'open' : ''}`}>
-        <div className="sidebar-header">
-          <img src="/logoramen.jpg" alt="Logo" className="sidebar-logo" />
+      <header className="main-header">
+        <div className="brand-section">
+          <img src="/logoramen.jpg" alt="Logo" className="header-logo" />
           <h2>MewRamen</h2>
-          <img src="/locationlogo.png" alt="Vị trí" className="location-logo" />
-          <span className="location-text">ĐỊA CHỈ: Hà Nội</span>
-          <button className="close-menu" onClick={toggleMenu}>×</button>
-        </div>
-        
-        <div className="user-info">
-          {currentUser ? (
-            <>
-              <div className="avatar">
-                {currentUser?.username?.charAt(0).toUpperCase()}
-              </div>
-              <div className="user-details">
-            <p className="username">{currentUser.username}</p>
-            <p className="role">Khách hàng</p>
-          </div>
-        </>
-          ): (
-            <div className="guest-info">
-              <Link to="/login" className="login-link">Đăng nhập</Link>
-              <Link to="/register" className="register-link">Đăng ký</Link>
-            </div>
-          )}
-        </div>
 
-        <nav className="sidebar-menu">
-          <ul>
-            <li>
-              <Link to="/dashboard">
-                <span className="icon">📊</span>
-                Trang chủ
-              </Link>
-            </li>
-            
-            <li>
-              <Link to="/menu">
-                <span className="icon">🍜</span>
-                Thực đơn
-              </Link>
-            </li>
-            
-            <li>
-              <Link to="/cart" onClick={handleOrderClick}>
-                <span className="icon">🛒</span>
-                Giỏ hàng {!currentUser && <span className="lock-icon">🔒</span>}
-              </Link>
-            </li>
-            
-            {currentUser && (
-            <>
-            <li>
-              <Link to="/user/orders">
-                <span className="icon">📦</span>
-                Đơn hàng của tôi
-              </Link>
-            </li>
-            
-            <li>
-              <Link to="/user/profile">
-                <span className="icon">👤</span>
-                Thông tin cá nhân
-              </Link>
-            </li>
-            
-            <li>
-              <button onClick={handleLogout} className="logout-button">
-                <span className="icon">🚪</span>
-                Đăng xuất
-              </button>
-            </li>
-          </>
-        )}
+          <div className="location-wrapper">
+            <img src="/locationlogo.png" alt="Vị trí" className="location-logo" />
+            <span className="location-text">ĐỊA CHỈ: Hà Nội</span>
+          </div>
+        </div> 
+
+        <form className="search-bar">
+          <input
+            type="text"
+            placeholder="Tìm kiếm món ăn..."
+            className="search-input"
+          />
+          <button type="submit" className="search-btn">
+            <img src="/searchlogo.png" alt="Tìm kiếm"/>
+          </button> 
+        </form>
+      </header>
         
-        {!currentUser && (
-          <li>
-            <Link to="/login" className="login-button">
-            <span className="icon">🔑</span>
-              Đăng nhập
-            </Link>
-          </li>
-        )}
-      </ul>
-    </nav>
-  </div>
+      <div className="content-wrapper">
+        <div className={`sidebar ${menuOpen ? 'open' : ''}`}>
+          <div className="sidebar-header"></div>
+      
+          <div className="user-info">
+            {currentUser ? (
+              <>
+                <div className="avatar">
+                  {currentUser?.username?.charAt(0).toUpperCase()}
+                </div>
+                <div className="user-details">
+                  <p className="username">{currentUser.username}</p>
+                  <p className="role">Khách hàng</p>
+                </div>
+              </>
+            ) : (
+              <div className="guest-info">
+                <Link to="/login" className="login-link">Đăng nhập</Link>
+                <Link to="/register" className="register-link">Đăng ký</Link>
+              </div>
+            )}
+          </div>
+
+          <nav className="sidebar-menu">
+            <ul>
+              <li>
+                <Link to="/dashboard">
+                  <span className="icon">📊</span>
+                  Trang chủ
+                </Link>
+              </li>
+              
+              <li>
+                <Link to="/menu">
+                  <span className="icon">🍜</span>
+                  Thực đơn
+                </Link>
+              </li>
+              
+              <li>
+                <Link to="/cart" onClick={handleOrderClick}>
+                  <span className="icon">🛒</span>
+                  Giỏ hàng {!currentUser && <span className="lock-icon">🔒</span>}
+                </Link>
+              </li>
+              
+              {currentUser && (
+              <>
+              <li>
+                <Link to="/user/orders">
+                  <span className="icon">📦</span>
+                  Đơn hàng của tôi
+                </Link>
+              </li>
+              
+              <li>
+                <Link to="/user/profile">
+                  <span className="icon">👤</span>
+                  Thông tin cá nhân
+                </Link>
+              </li>
+              
+              <li>
+                <button onClick={handleLogout} className="logout-button">
+                  <span className="icon">🚪</span>
+                  Đăng xuất
+                </button>
+              </li>
+            </>
+          )}
+          
+          {!currentUser && (
+            <li>
+              <Link to="/login" className="login-button">
+              <span className="icon">🔑</span>
+                Đăng nhập
+              </Link>
+            </li>
+          )}
+        </ul>
+      </nav>
+    </div>
       
       <div className="main-content">
-        <header className="dashboard-header">
-          <form className="search-bar">
-            <input
-              type="text"
-              placeholder="Tìm kiếm theo tên nhà hàng, tên món..."
-              className="search-input"
-            />
-            <button type="submit" className="search-btn">
-              <img src="/searchlogo.png" alt="Tìm kiếm" />
-            </button>
-          </form>
-        </header>
-        
+        <button className="menu-toggle" onClick={toggleMenu}>☰</button>
+
         <div className="dashboard-content">
           <div className="welcome-card">
             <h2>Xin chào, {currentUser?.username || 'Quý Khách'}!</h2>
@@ -236,6 +243,7 @@ const UserDashboard = () => {
         </div>
       </div>
     </div>
+  </div>
   );
 };
 
