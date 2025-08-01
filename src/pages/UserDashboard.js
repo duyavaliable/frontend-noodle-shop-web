@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { productService } from '../services/api';
-import '../style/UserDashboard.css';
+import '../style/Dashboard.css';
 
 const UserDashboard = () => {
   const { currentUser, logout } = useContext(AuthContext);
@@ -65,7 +65,10 @@ const UserDashboard = () => {
     <div className="dashboard-container">
       <div className={`sidebar ${menuOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
-          <h2>Bán Mì</h2>
+          <img src="/logoramen.jpg" alt="Logo" className="sidebar-logo" />
+          <h2>MewRamen</h2>
+          <img src="/locationlogo.png" alt="Vị trí" className="location-logo" />
+          <span className="location-text">ĐỊA CHỈ: Hà Nội</span>
           <button className="close-menu" onClick={toggleMenu}>×</button>
         </div>
         
@@ -150,8 +153,16 @@ const UserDashboard = () => {
       
       <div className="main-content">
         <header className="dashboard-header">
-          <button className="menu-toggle" onClick={toggleMenu}>☰</button>
-          <h1>Trang chủ</h1>
+          <form className="search-bar">
+            <input
+              type="text"
+              placeholder="Tìm kiếm theo tên nhà hàng, tên món..."
+              className="search-input"
+            />
+            <button type="submit" className="search-btn">
+              <img src="/searchlogo.png" alt="Tìm kiếm" />
+            </button>
+          </form>
         </header>
         
         <div className="dashboard-content">

@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import '../style/AdminDashboard.css';
+import '../style/Dashboard.css';
 
 const AdminDashboard = () => {
   const { currentUser, logout } = useContext(AuthContext);
@@ -26,6 +26,7 @@ const AdminDashboard = () => {
     <div className="dashboard-container">
       <div className={`sidebar ${menuOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
+          <img src="/logoramen.jpg" alt="Logo" className="siderbar-logo"/>
           <h2>Bán Mì</h2>
           <button className="close-menu" onClick={toggleMenu}>×</button>
         </div>

@@ -39,7 +39,7 @@ const Login = () => {
       
 
     } catch (err) {
-      setError(err.response?.data?.message || 'Đăng nhập thất bại. Vui lòng kiểm tra thông tin đăng nhập.');
+      setError('Đăng nhập thất bại. Vui lòng kiểm tra thông tin đăng nhập.');
     } finally {
       setLoading(false);
     }
