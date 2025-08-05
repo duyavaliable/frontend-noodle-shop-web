@@ -7,7 +7,6 @@ import '../style/Dashboard.css';
 const UserDashboard = () => {
   const { currentUser, logout } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [menuOpen, setMenuOpen] = useState(false);
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const DEFAULT_IMAGE = "/defaultimage.png";
@@ -19,11 +18,6 @@ const UserDashboard = () => {
     }
     navigate('/login');
   }
-
-  // Toggle menu trên thiết bị di động
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
-  };
 
   //Format gia tien 
   const formatPrice = (price) => {
@@ -74,66 +68,52 @@ const UserDashboard = () => {
           </div>
         </div> 
 
-        <form className="search-bar">
-          <input
-            type="text"
-            placeholder="Tìm kiếm món ăn..."
-            className="search-input"
-          />
-          <button type="submit" className="search-btn">
-            <img src="/searchlogo.png" alt="Tìm kiếm"/>
-          </button> 
-        </form>
-      </header>
-        
-      <div className="content-wrapper">
-        <div className={`sidebar ${menuOpen ? 'open' : ''}`}>
-          <div className="sidebar-header"></div>
-      
-          <div className="user-info">
-            {currentUser ? (
-              <>
-                <div className="avatar">
-                  {currentUser?.username?.charAt(0).toUpperCase()}
-                </div>
-                <div className="user-details">
-                  <p className="username">{currentUser.username}</p>
-                  <p className="role">Khách hàng</p>
-                </div>
-              </>
-            ) : (
-              <div className="guest-info">
-                <Link to="/login" className="login-link">Đăng nhập</Link>
-                <Link to="/register" className="register-link">Đăng ký</Link>
-              </div>
-            )}
-          </div>
+        <div className="header-right">
+          <form className="search-bar">
+            <input
+              type="text"
+              placeholder="Tìm kiếm món ăn..."
+              className="search-input"
+            />
+            <button type="submit" className="search-btn">
+              <img src="/searchlogo.png" alt="Tìm kiếm"/>
+            </button> 
+          </form>
 
-          <nav className="sidebar-menu">
-            <ul>
-              <li>
-                <Link to="/dashboard">
-                  <span className="icon">📊</span>
-                  Trang chủ
-                </Link>
-              </li>
-              
-              <li>
-                <Link to="/menu">
-                  <span className="icon">🍜</span>
-                  Thực đơn
-                </Link>
-              </li>
-              
-              <li>
-                <Link to="/cart" onClick={handleOrderClick}>
-                  <span className="icon">🛒</span>
-                  Giỏ hàng {!currentUser && <span className="lock-icon">🔒</span>}
-                </Link>
-              </li>
-              
-              {currentUser && (
-              <>
+          {!currentUser && (
+            <div className="header-auth-buttons">
+              <Link to="/signup" className="header-auth-btn register-btn">Đăng ký</Link>
+              <Link to="/login" className="header-auth-btn login-btn">Đăng nhập</Link>
+            </div>
+            )}
+        </div>
+      </header>
+
+      <nav className="sidebar-menu">
+        <ul>
+          <li>
+            <Link to="/dashboard">
+              <span className="icon">📊</span>
+              Trang chủ
+            </Link>
+          </li>
+          
+          <li>
+            <Link to="/menu">
+              <span className="icon">🍜</span>
+              Thực đơn
+            </Link>
+          </li>
+          
+          <li>
+            <Link to="/cart" onClick={handleOrderClick}>
+              <span className="icon">🛒</span>
+              Giỏ hàng {!currentUser && <span className="lock-icon">🔒</span>}
+            </Link>
+          </li>
+          
+          {currentUser && (
+            <>
               <li>
                 <Link to="/user/orders">
                   <span className="icon">📦</span>
@@ -156,27 +136,27 @@ const UserDashboard = () => {
               </li>
             </>
           )}
-          
-          {!currentUser && (
-            <li>
-              <Link to="/login" className="login-button">
-              <span className="icon">🔑</span>
-                Đăng nhập
-              </Link>
-            </li>
-          )}
         </ul>
       </nav>
-    </div>
+      
+      <div className="content-wrapper">
+        {currentUser && (
+          <div className={"sidebar"}>
+            <div className="user-info">
+              <div className="avatar">
+                {currentUser?.username?.charAt(0).toUpperCase()}
+              </div>
+              <div className="user-details">
+                <p className="username">{currentUser.username}</p>
+                <p className="role">Khách hàng</p>
+              </div>
+            </div>
+          </div>
+        )}
+
       
       <div className="main-content">
-        <button className="menu-toggle" onClick={toggleMenu}>☰</button>
-
         <div className="dashboard-content">
-          <div className="welcome-card">
-            <h2>Xin chào, {currentUser?.username || 'Quý Khách'}!</h2>
-            <p>Chào mừng đến với Bán Mì. Chúng tôi rất vui khi được phục vụ bạn.</p>
-          </div>
           
           <div className="featured-products">
             <h3>Món ăn nổi bật</h3>

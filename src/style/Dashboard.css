@@ -105,19 +105,26 @@
 /* Content Layout */
 .content-wrapper {
   display: flex;
+  flex-direction: row;
   flex: 1;
+  padding-top: 20px;
+}
+.main-content {
+  flex: 1;
+  padding: 0 20px;
 }
 
 /* Sidebar styles */
 .sidebar {
   width: 280px;
   color: #f8fafc;
+  background-color: #1e293b;
   display: flex;
   flex-direction: column;
   height: calc(100vh - 70px);
   position: fixed;
-  left: -280px;
   top: 70px;
+  left: -280px; 
   overflow-y: auto;
   transition: all 0.3s ease;
   z-index: 1000;
@@ -178,30 +185,24 @@
   font-size: 0.875rem;
 }
 
-/* Guest info when not logged in */
-.guest-info {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
-.login-link, .register-link {
-  padding: 0.5rem 0;
-  color: #f8fafc;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s;
-}
-
-.login-link:hover, .register-link:hover {
-  color: #3b82f6;
-}
-
 /* Sidebar Menu */
+.sidebar-menu {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+  width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
 .sidebar-menu ul {
   list-style: none;
   padding: 0;
   margin: 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .sidebar-menu li {
@@ -211,83 +212,33 @@
 .sidebar-menu a, .logout-button, .login-button {
   display: flex;
   align-items: center;
-  padding: 0.75rem 1.5rem;
-  color: #cbd5e1;
+  padding: 15px 20px;
+  color: #333;
   text-decoration: none;
   transition: all 0.2s;
-  width: 100%;
   border: none;
   background: none;
-  text-align: left;
-  font-size: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
   font-family: inherit;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .sidebar-menu a:hover, .logout-button:hover, .login-button:hover {
-  background-color: #334155;
-  color: #f8fafc;
+  background-color: #f1f1f1;
+  color: #0f766e;
 }
 
 .icon {
-  margin-right: 0.75rem;
-  font-size: 1.25rem;
-  width: 24px;
-  text-align: center;
-}
-
-.lock-icon {
-  margin-left: 0.5rem;
-  font-size: 0.875rem;
-  color: #94a3b8;
-}
-
-/* Main Content Area */
-.main-content {
-  flex: 1;
-  margin-left: 0;
-  transition: margin-left 0.3s ease;
-  padding-top: 20px;
-}
-
-@media (min-width: 769px) {
-  .main-content {
-    margin-left: 280px;
-  }
-}
-
-.menu-toggle {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  margin-right: 1rem;
-  cursor: pointer;
-  display: block;
-}
-
-@media (min-width: 769px) {
-  .menu-toggle {
-    display: none;
-  }
+  margin-right: 8px;
+  font-size: 1.1rem;
 }
 
 .dashboard-content {
   padding: 1.5rem;
 }
 
-/* Welcome Card */
-.welcome-card {
-  background-color: #ffffff;
-  border-radius: 0.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.welcome-card h2 {
-  margin-top: 0;
-  color: #1e293b;
-}
 
 /* Featured Products Section */
 .featured-products {
@@ -432,8 +383,59 @@
   background-color: #2563eb;
 }
 
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.header-auth-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.header-auth-btn {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+}
+
+.register-btn {
+  background-color: transparent;
+  color: #333;
+  border: 1px solid #cfd8dc;
+}
+
+.register-btn:hover {
+  background-color: #f1f1f1;
+}
+
+.login-btn {
+  background-color: #0f766e;
+  color: white;
+}
+
+.login-btn:hover {
+  background-color: #0e6e67;
+}
+
+
+
 /* Mobile responsive */
 @media (max-width: 768px) {
+  .sidebar-menu ul {
+    flex-direction: column;
+  }
+  
+  .sidebar-menu a, .logout-button, .login-button {
+    padding: 10px;
+    justify-content: center;
+  }
+
   .main-header {
     padding: 1rem;
     flex-wrap: wrap;
@@ -457,6 +459,37 @@
   }
   
   .product-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+  
+  .user-action-cards {
+    grid-template-columns: 1fr;
+  }
+   .header-right {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .header-auth-buttons {
+    margin-top: 10px;
+    width: 100%;
+  }
+  
+  .header-auth-btn {
+    flex: 1;
+    text-align: center;
+  }
+
+  .content-wrapper {
+    flex-direction: column;
+  }
+  
+  .main-content {
+    margin-left: 0;
+    width: 100%;
+  }
+
+   .product-grid {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   }
   

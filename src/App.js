@@ -125,14 +125,7 @@ function App() {
           />
 
           {/* Protected Routes for Regular Users */}
-          <Route 
-            path="/dashboard" 
-            element={
-              <UserRoute>
-                <UserDashboard />
-              </UserRoute>
-            }
-          />
+          <Route path="/dashboard" element={<UserDashboard />} />
 
           <Route path="/cart" element={<Cart />} />
           <Route path="/order-success" element={<OrderSuccess />} />
