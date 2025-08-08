@@ -8,6 +8,7 @@ const UserDashboard = () => {
   const { currentUser, logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
   const [loading, setLoading] = useState(true);
   const DEFAULT_IMAGE = "/defaultimage.png";
 
@@ -18,6 +19,11 @@ const UserDashboard = () => {
     }
     navigate('/login');
   }
+  
+  //dong/mo dropdown
+  const toggleDropdown = () => {
+    setShowDropdown(!showDropdown);
+  };
 
   //Format gia tien 
   const formatPrice = (price) => {
@@ -40,9 +46,7 @@ const UserDashboard = () => {
     const fetchFeaturedProducts = async () => {
       setLoading(true);
       try {
-        // Lấy tất cả sản phẩm
         const data = await productService.getAllProducts();
-        // Lấy 4 sản phẩm đầu tiên để hiển thị
         setFeaturedProducts(data.slice(0, 4));
       } catch (err) {
         console.error("Không thể tải danh sách sản phẩm nổi bật:", err);
@@ -50,9 +54,23 @@ const UserDashboard = () => {
         setLoading(false);
       }
     };
-
+    
     fetchFeaturedProducts();
   }, []);
+
+  // useEffect riêng cho việc xử lý click outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showDropdown && !event.target.closest('.header-user-infor')) {
+        setShowDropdown(false);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showDropdown]);
 
 
   return (
@@ -80,7 +98,32 @@ const UserDashboard = () => {
             </button> 
           </form>
 
-          {!currentUser && (
+          {currentUser ? (
+            // Hiển thị thông tin người dùng nếu đã đăng nhập
+            <div className="header-user-infor">
+              <div className="avatar header-avatar"
+                   onClick={toggleDropdown}
+                   style={{ cursor: 'pointer'}}
+                   >
+                {currentUser?.username?.charAt(0).toUpperCase()}
+              </div>
+              
+              {showDropdown && (
+                <div className="user-dropdown">
+                  <div className="dropdown-divider"></div>
+                  <Link to="/user/profile" className="dropdown-item" onClick={() => setShowDropdown(false)}>
+                    <span className="dropdown-icon">👤</span>
+                    <span className="dropdown-text">Thông tin cá nhân</span>
+                  </Link>
+                  <button onClick={handleLogout} className="dropdown-item logout-button">
+                    <span className="dropdown-icon">🚪</span>
+                    <span className="dropdown-text">Đăng xuất</span>
+                  </button>
+                </div>
+                )}
+            </div>
+           ) : (
+            // Hiển thị nút đăng ký và đăng nhập nếu chưa đăng nhập 
             <div className="header-auth-buttons">
               <Link to="/signup" className="header-auth-btn register-btn">Đăng ký</Link>
               <Link to="/login" className="header-auth-btn login-btn">Đăng nhập</Link>
@@ -93,21 +136,18 @@ const UserDashboard = () => {
         <ul>
           <li>
             <Link to="/dashboard">
-              <span className="icon">📊</span>
               Trang chủ
             </Link>
           </li>
           
           <li>
             <Link to="/menu">
-              <span className="icon">🍜</span>
               Thực đơn
             </Link>
           </li>
           
           <li>
             <Link to="/cart" onClick={handleOrderClick}>
-              <span className="icon">🛒</span>
               Giỏ hàng {!currentUser && <span className="lock-icon">🔒</span>}
             </Link>
           </li>
@@ -116,48 +156,17 @@ const UserDashboard = () => {
             <>
               <li>
                 <Link to="/user/orders">
-                  <span className="icon">📦</span>
                   Đơn hàng của tôi
                 </Link>
-              </li>
-              
-              <li>
-                <Link to="/user/profile">
-                  <span className="icon">👤</span>
-                  Thông tin cá nhân
-                </Link>
-              </li>
-              
-              <li>
-                <button onClick={handleLogout} className="logout-button">
-                  <span className="icon">🚪</span>
-                  Đăng xuất
-                </button>
               </li>
             </>
           )}
         </ul>
       </nav>
       
-      <div className="content-wrapper">
-        {currentUser && (
-          <div className={"sidebar"}>
-            <div className="user-info">
-              <div className="avatar">
-                {currentUser?.username?.charAt(0).toUpperCase()}
-              </div>
-              <div className="user-details">
-                <p className="username">{currentUser.username}</p>
-                <p className="role">Khách hàng</p>
-              </div>
-            </div>
-          </div>
-        )}
-
-      
+    <div className="content-wrapper">
       <div className="main-content">
         <div className="dashboard-content">
-          
           <div className="featured-products">
             <h3>Món ăn nổi bật</h3>
             <div className="product-grid">
@@ -190,34 +199,6 @@ const UserDashboard = () => {
               ) : (
                 <p>Không có món ăn nào.</p>
               )}
-            </div>
-          </div>
-
-
-          <div className="user-action-cards">
-            <div className="action-card">
-              <div className="action-icon">🛒</div>
-              <h3>Đặt hàng ngay</h3>
-              <p>Khám phá thực đơn đa dạng và đặt món bạn yêu thích</p>
-              <Link to="/menu" className="action-btn">Xem thực đơn</Link>
-            </div>
-            
-            <div className="action-card">
-              <div className="action-icon">📦</div>
-              <h3>Đơn hàng của tôi</h3>
-              <p>Theo dõi trạng thái và lịch sử đơn hàng của bạn</p>
-              <Link to={currentUser ? "/user/orders" : "/login"} className="action-btn">
-                {currentUser ? "Xem đơn hàng" : "Đăng nhập để xem"}
-              </Link>
-            </div>
-            
-            <div className="action-card">
-              <div className="action-icon">👤</div>
-              <h3>Thông tin cá nhân</h3>
-              <p>Cập nhật thông tin cá nhân và địa chỉ giao hàng</p>
-              <Link to={currentUser ? "/user/profile" : "/login"} className="action-btn">
-                {currentUser ? "Cập nhật" : "Đăng nhập để xem"}
-              </Link>
             </div>
           </div>
         </div>
