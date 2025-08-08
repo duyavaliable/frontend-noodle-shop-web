@@ -147,17 +147,11 @@ const AdminDashboard = () => {
               </Link>
             </li>
             
-            <li>
-              <Link to="/cart" onClick={handleOrderClick}>
-                Giỏ hàng {!currentUser && <span className="lock-icon">🔒</span>}
-              </Link>
-            </li>
-            
             {currentUser && (
               <>
                 <li>
                   <Link to="/user/orders">
-                    Đơn hàng của tôi
+                    Đơn hàng
                   </Link>
                 </li>
               </>
