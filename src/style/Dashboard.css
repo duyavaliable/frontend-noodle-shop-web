@@ -102,7 +102,7 @@
   object-fit: contain;
 }
 /* header user infor styling */
-.header-user-info {
+.header-user-infor {
   position: relative;
   display: flex;
   align-items: center;
@@ -275,8 +275,7 @@
 
 /* Sidebar Menu */
 .sidebar-menu {
-  background-color: #f8f9fa;
-  border-bottom: 1px solid #dee2e6;
+  background-color: #fff;
   width: 100%;
   position: sticky;
   top: 0;
@@ -291,32 +290,65 @@
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
+  background: #fff;
 }
 
 .sidebar-menu li {
   margin: 0;
+  padding: 0;
 }
 
-.sidebar-menu a, .logout-button, .login-button {
+.sidebar-menu a {
   display: flex;
   align-items: center;
-  padding: 15px 20px;
+  justify-content: center;
+  padding: 15px 30px;
   color: #333;
   text-decoration: none;
-  transition: all 0.2s;
-  border: none;
-  background: none;
-  text-align: center;
-  font-size: 0.9rem;
+  font-size: 1rem;
+  font-weight: 500;
   font-family: inherit;
   cursor: pointer;
   white-space: nowrap;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  background: transparent;
+  transition: all 0.3s ease;
+  position: relative;
+  margin: 0 5px;
 }
 
-.sidebar-menu a:hover, .logout-button:hover, .login-button:hover {
-  background-color: #f1f1f1;
-  color: #0f766e;
+.sidebar-menu a:hover {
+  background-color: rgba(37, 99, 235, 0.1);
+  color: #2563eb;
 }
+
+.sidebar-menu a.active  {
+  background-color: #2563eb;
+  color: white;
+}
+
+.sidebar-menu a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: #2563eb;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.sidebar-menu a:hover::after {
+  transform: scaleX(1);
+}
+
+.sidebar-menu a.active::after {
+  transform: scaleX(1);
+  height: 4px;
+}
+
 
 .icon {
   margin-right: 8px;
@@ -398,7 +430,7 @@
   display: block;
   text-align: center;
   padding: 0.75rem;
-  background-color: #0f766e;
+  background-color: #2563eb;
   color: white;
   text-decoration: none;
   margin: 1rem;
@@ -408,7 +440,7 @@
 }
 
 .view-menu-btn:hover {
-  background-color: #0e6e67;
+  background-color: #2563eb;
 }
 
 .loading-indicator {
@@ -503,14 +535,83 @@
 }
 
 .login-btn {
-  background-color: #0f766e;
+  background-color: #2563eb;
   color: white;
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  cursor: pointer;
+  white-space: nowrap;
+  border: none;
+  transition: all 0.3s ease;
 }
 
 .login-btn:hover {
-  background-color: #0e6e67;
+  background-color: rgba(37, 99, 235, 0.1);
+  color: #2563eb;
+  border: 1px solid #2563eb;
 }
 
+//ui dat hang cho admin
+.status-actions {
+  display: flex;
+  gap: 5px;
+  margin-top: 5px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+
+.confirm-btn, .shipping-btn, .paid-btn, .cancel-btn {
+  font-size: 12px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+}
+
+.confirm-btn {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.shipping-btn {
+  background-color: #2196F3;
+  color: white;
+}
+
+.paid-btn {
+  background-color: #9C27B0;
+  color: white;
+}
+
+.cancel-btn {
+  background-color: #F44336;
+  color: white;
+}
+
+.confirm-btn:disabled, .shipping-btn:disabled, .paid-btn:disabled, .cancel-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+/* Style cho trạng thái đã thanh toán */
+.status-paid {
+  background-color: #9C27B0;
+  color: white;
+}
+
+.role-badge {
+  background-color: #4caf50;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  margin-left: 15px;
+}
 
 
 /* Mobile responsive */

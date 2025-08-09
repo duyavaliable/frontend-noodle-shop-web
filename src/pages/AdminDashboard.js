@@ -30,16 +30,6 @@ const AdminDashboard = () => {
       return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
     };
   
-    //Xu ly khi nguoi dung chua dang nhap
-    const handleOrderClick = (e) => {
-      if (!currentUser) {
-        e.preventDefault();
-        alert("Vui lòng đăng nhập để đặt hàng.");
-        navigate('/login');
-      }
-    };
-  
-  
     // Lấy danh sách sản phẩm khi component được mount 
     //lay 4 san pham bat ki trong co so du lieu
     useEffect(() => {
@@ -85,7 +75,13 @@ const AdminDashboard = () => {
               <span className="location-text">ĐỊA CHỈ: Hà Nội</span>
             </div>
           </div> 
-  
+
+          {currentUser && (currentUser.role === 'admin' || currentUser.role === 'staff') && (
+            <div className="role-badge">
+              {currentUser.role === 'admin' ? 'Quản trị viên' : 'Nhân viên'}
+            </div>
+          )}
+
           <div className="header-right">
             <form className="search-bar">
               <input
@@ -147,15 +143,27 @@ const AdminDashboard = () => {
               </Link>
             </li>
             
-            {currentUser && (
-              <>
-                <li>
-                  <Link to="/user/orders">
-                    Đơn hàng
-                  </Link>
-                </li>
-              </>
-            )}
+            {currentUser && (currentUser.role === 'admin' || currentUser.role === 'staff') && (
+            <>
+              <li>
+                <Link to="/admin/orders">
+                  Quản lý đơn hàng
+                </Link>
+              </li>
+              
+              <li>
+                <Link to="/products">
+                  Quản lý sản phẩm
+                </Link>
+              </li>
+              
+              <li>
+                <Link to="/categories">
+                  Quản lý danh mục
+                </Link>
+              </li>
+            </>
+          )}
           </ul>
         </nav>
         

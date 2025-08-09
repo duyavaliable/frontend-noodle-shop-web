@@ -112,6 +112,7 @@ const AdminOrders = () => {
       case 'đã xác nhận': return 'status-confirmed';
       case 'đang giao hàng': return 'status-shipping';
       case 'đã giao hàng': return 'status-delivered';
+      case 'đã thanh toán': return 'status-paid';
       case 'đã hủy': return 'status-canceled';
       default: return '';
     }
@@ -141,6 +142,7 @@ const AdminOrders = () => {
           <option value="đã xác nhận">Đã xác nhận</option>
           <option value="đang giao hàng">Đang giao hàng</option>
           <option value="đã giao hàng">Đã giao hàng</option>
+          <option value="đã thanh toán">Đã thanh toán</option>
           <option value="đã hủy">Đã hủy</option>
         </select>
       </div>
@@ -168,7 +170,14 @@ const AdminOrders = () => {
               {filteredOrders.map((order) => (
                 <tr key={order.id}>
                   <td>#{order.id}</td>
-                  <td>{order.customer_name}</td>
+                  <td>
+                    {order.customer_name}
+                    {order.user_username && (
+                      <div className="user-account-info">
+                        <small>Tài khoản: {order.user_username}</small>
+                      </div>
+                    )}
+                  </td>
                   <td>{formatDate(order.order_date)}</td>
                   <td>{formatPrice(order.total_amount)}</td>
                   <td>
@@ -182,15 +191,38 @@ const AdminOrders = () => {
                       className="view-btn"
                       disabled={loading}
                     >
-                      Xem
+                    Xem chi tiết
+                  </button>
+                  <div className="status-actions">
+                    <button 
+                      onClick={() => updateOrderStatus(order.id, 'Đã xác nhận')}
+                      className="confirm-btn"
+                      disabled={loading || order.status === 'Đã xác nhận'}
+                    >
+                      Xác nhận
                     </button>
                     <button 
-                      onClick={() => deleteOrder(order.id)}
-                      className="delete-btn"
-                      disabled={loading}
+                      onClick={() => updateOrderStatus(order.id, 'Đang giao hàng')}
+                      className="shipping-btn"
+                      disabled={loading || order.status === 'Đang giao hàng' || order.status === 'Đã hủy'}
                     >
-                      Xóa
+                      Đang giao
                     </button>
+                    <button 
+                      onClick={() => updateOrderStatus(order.id, 'Đã thanh toán')}
+                      className="paid-btn"
+                      disabled={loading || order.status === 'Đã thanh toán' || order.status === 'Đã hủy'}
+                    >
+                      Đã thanh toán
+                    </button>
+                    <button 
+                      onClick={() => updateOrderStatus(order.id, 'Đã hủy')}
+                      className="cancel-btn"
+                      disabled={loading || order.status === 'Đã hủy'}
+                    >
+                      Hủy đơn
+                    </button>
+                  </div>
                   </td>
                 </tr>
               ))}
@@ -205,20 +237,23 @@ const AdminOrders = () => {
           <div className="modal-content">
             <span className="close-modal" onClick={closeOrderDetails}>&times;</span>
             <h2>Chi tiết đơn hàng #{selectedOrder.id}</h2>
-            
+                  
             <div className="order-info">
-              <div className="order-info-row">
-                <div className="order-info-group">
-                  <p><strong>Ngày đặt hàng:</strong> {formatDate(selectedOrder.order_date)}</p>
-                  <p><strong>Người nhận:</strong> {selectedOrder.customer_name}</p>
-                  <p><strong>Số điện thoại:</strong> {selectedOrder.customer_phone}</p>
-                </div>
-                
-                <div className="order-status-group">
-                  <p><strong>Trạng thái hiện tại:</strong></p>
+              <div className="customer-info">
+                <h3>Thông tin khách hàng</h3>
+                <p><strong>Họ tên:</strong> {selectedOrder.customer_name}</p>
+                <p><strong>Số điện thoại:</strong> {selectedOrder.customer_phone}</p>
+                <p><strong>Địa chỉ:</strong> {selectedOrder.shipping_address}</p>
+              </div>
+              
+              <div className="order-status-info">
+                <h3>Thông tin đơn hàng</h3>
+                <p><strong>Ngày đặt hàng:</strong> {formatDate(selectedOrder.order_date)}</p>
+                <p><strong>Trạng thái hiện tại:</strong> 
                   <span className={`order-status ${getStatusClass(selectedOrder.status)}`}>
                     {selectedOrder.status}
                   </span>
+                </p>
                   
                   <div className="update-status">
                     <label htmlFor="new-status">Cập nhật trạng thái:</label>
@@ -295,7 +330,6 @@ const AdminOrders = () => {
               </button>
             </div>
           </div>
-        </div>
       )}
     </div>
   );
