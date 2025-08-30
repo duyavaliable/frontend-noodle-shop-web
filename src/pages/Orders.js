@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { orderService } from '../services/api';
 import '../style/Orders.css';
+import '../style/Menu.css';
 
 const MyOrders = () => {
   const { currentUser } = useContext(AuthContext);
@@ -73,7 +74,14 @@ const MyOrders = () => {
 
   return (
     <div className="my-orders-container">
-      <h1 className="page-title">Đơn hàng của tôi</h1>
+      <header className="menu-header">
+        <h1 className="menu-title">Đơn hàng của tôi</h1>
+        <div className="menu-nav">
+          <Link to="/dashboard" className="menu-nav-link">Trang chủ</Link>
+          <Link to="/menu" className="menu-nav-link">Thực đơn</Link>
+          <Link to="/cart" className="menu-nav-link">Giỏ hàng</Link>
+        </div>
+      </header>
       
       {error && <div className="error-message">{error}</div>}
       

@@ -132,7 +132,7 @@ const AdminDashboard = () => {
         <nav className="sidebar-menu">
           <ul>
             <li>
-              <Link to="/dashboard">
+              <Link to="/admin/dashboard">
                 Trang chủ
               </Link>
             </li>

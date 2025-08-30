@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { productService, categoryService } from '../services/api';
 import '../style/Products.css';
+import '../style/Menu.css';
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -60,17 +62,6 @@ const Products = () => {
       console.error(err);
     } finally {
       setLoading(false);
-    }
-  };
-
-  // Fetch tất cả danh mục để hiển thị trong dropdown
-  const fetchCategories = async () => {
-    try {
-      const data = await categoryService.getAllCategories();
-      setCategories(data);
-    } catch (err) {
-      setError('Không thể tải danh mục');
-      console.error(err);
     }
   };
 
@@ -170,7 +161,15 @@ const Products = () => {
 
   return (
     <div className="products-container">
-      <h1 className="products-title">Quản lý món ăn</h1>
+      <header className="menu-header">
+        <h1 className="products-title">Quản lý món ăn</h1>
+        <div className="menu-nav">
+          <Link to="/admin/dashboard" className="menu-nav-link">Trang chủ</Link>
+          <Link to="/menu" className="menu-nav-link">Thực đơn</Link>
+          <Link to="/admin/orders" className="menu-nav-link">Quản lý đơn hàng</Link>
+          <Link to="/categories" className="menu-nav-link">Quản lý danh mục</Link>
+        </div>
+      </header>
       
       {error && <div className="error-message">{error}</div>}
       

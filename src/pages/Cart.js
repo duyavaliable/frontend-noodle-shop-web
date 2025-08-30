@@ -136,7 +136,25 @@ useEffect(() => {
 
   return (
     <div className="cart-container">
-      <h1 className="cart-title">Giỏ hàng</h1>
+      <header className="menu-header">
+        <h1 className="menu-title">Giỏ hàng</h1>
+        <div className="menu-nav">
+          {currentUser && (currentUser.role === 'admin' || currentUser.role === 'staff') ? (
+            <>
+              <Link to="/admin/dashboard" className="menu-nav-link">Trang chủ</Link>
+              <Link to="/menu" className="menu-nav-link">Thực đơn</Link>
+              <Link to="/admin/orders" className="menu-nav-link">Quản lý đơn hàng</Link>
+            </>
+          ) : (
+            <>
+              <Link to={currentUser ? "/dashboard" : "/"} className="menu-nav-link">Trang chủ</Link>
+              <Link to="/menu" className="menu-nav-link">Thực đơn</Link>
+              {currentUser && <Link to="/user/orders" className="menu-nav-link">Đơn hàng của tôi</Link>}
+            </>
+          )}
+        </div>
+      </header>
+  
       
       {error && <div className="error-message">{error}</div>}
       

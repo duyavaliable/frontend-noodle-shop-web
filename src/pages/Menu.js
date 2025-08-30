@@ -100,12 +100,20 @@ const Menu = () => {
       <header className="menu-header">
         <h1 className="menu-title">Thực đơn</h1>
         <div className="menu-nav">
-          <Link to="/" className="menu-nav-link">Trang chủ</Link>
-          {currentUser ? (
-            <Link to="/dashboard" className="menu-nav-link">Trang cá nhân</Link>
+          {currentUser && (currentUser.role === 'admin' || currentUser.role === 'staff') ? (
+            <>
+              <Link to="/admin/dashboard" className="menu-nav-link"> Trang chủ</Link>
+              <Link to="/admin/orders" className="menu-nav-link">Quản lý đơn hàng</Link>
+              <Link to="/products" className="menu-nav-link">Quản lý sản phẩm</Link>
+              <Link to="/categories" className="menu-nav-link">Quản lý danh mục</Link>
+            </>
           ) : (
-            <Link to="/login" className="menu-nav-link">Đăng nhập</Link>
+            <>
+              <Link to={currentUser ? "/dashboard" : "/"} className="menu-nav-link">Trang chủ</Link>
+              {currentUser && <Link to="/user/orders" className="menu-nav-link">Đơn hàng của tôi</Link>}
+            </>
           )}
+
           <Link to="/cart" className="menu-nav-link">
             Giỏ hàng ({cartCount})
           </Link>

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { orderService } from '../services/api';
 import '../style/AdminOrders.css';
+import '../style/Menu.css';
 
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -125,7 +127,15 @@ const AdminOrders = () => {
 
   return (
     <div className="admin-orders-container">
-      <h1 className="page-title">Quản lý đơn hàng</h1>
+      <header className="menu-header">
+        <h1 className="page-title">Quản lý đơn hàng</h1>
+        <div className="menu-nav">
+          <Link to="/admin/dashboard" className="menu-nav-link">Trang chủ</Link>
+          <Link to="/menu" className="menu-nav-link">Thực đơn</Link>
+          <Link to="/products" className="menu-nav-link">Quản lý sản phẩm</Link>
+          <Link to="/categories" className="menu-nav-link">Quản lý danh mục</Link>
+        </div>
+      </header>
       
       {error && <div className="error-message">{error}</div>}
       

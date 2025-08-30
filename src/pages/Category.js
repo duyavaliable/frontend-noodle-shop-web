@@ -1,7 +1,8 @@
 import React, { useState, useEffect} from 'react';
+import { Link } from 'react-router-dom';
 import { categoryService } from '../services/api';
-// import { AuthContext } from '../context/AuthContext';
 import '../style/Categories.css';
+import '../style/Menu.css';
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
@@ -112,7 +113,15 @@ const Categories = () => {
 
   return (
     <div className="categories-container">
-      <h1 className="categories-title">Quản lý danh mục</h1>
+      <header className="menu-header">
+        <h1 className="categories-title">Quản lý danh mục</h1>
+        <div className="menu-nav">
+          <Link to="/admin/dashboard" className="menu-nav-link">Trang chủ</Link>
+          <Link to="/menu" className="menu-nav-link">Thực đơn</Link>
+          <Link to="/admin/orders" className="menu-nav-link">Quản lý đơn hàng</Link>
+          <Link to="/products" className="menu-nav-link">Quản lý sản phẩm</Link>
+        </div>
+      </header>
       
       {error && <div className="error-message">{error}</div>}
       
