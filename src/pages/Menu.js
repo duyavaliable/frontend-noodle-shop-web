@@ -12,6 +12,8 @@ const Menu = () => {
   const [error, setError] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [cartCount, setCartCount] = useState(0);
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
   const DEFAULT_IMAGE = "/defaultimage.png";
   
   // Cập nhật số lượng sản phẩm trong giỏ hàng
@@ -58,6 +60,48 @@ const Menu = () => {
     updateCartCount();
   }, [updateCartCount]);
 
+  // Tim kiem
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    if (!searchKeyword.trim()) {
+      setSearchResults(null);
+      return;
+    }
+    
+    setLoading(true);
+    try {
+      const results = await productService.searchProducts({
+        keyword: searchKeyword,
+        category_id: selectedCategory !== 'all' ? selectedCategory : ''
+      });
+      setSearchResults(results);
+    } catch (error) {
+      console.error('Lỗi khi tìm kiếm:', error);
+      setError('Không thể tìm kiếm sản phẩm.');
+    } finally {
+      setLoading(false);
+    }
+  };  
+
+
+  // Sửa lại phần lọc sản phẩm
+  const getDisplayProducts = () => {
+    if (searchResults) {
+      return searchResults;
+    }
+
+    return products.filter(product => {
+      if (selectedCategory === 'all') {
+        return true;
+      }
+      return product.category_id.toString() === selectedCategory;
+    });
+  };
+
+  const clearSearch = () => {
+    setSearchKeyword('');
+    setSearchResults(null);
+  };
 
   // Format giá tiền
   const formatPrice = (price) => {
@@ -86,14 +130,6 @@ const Menu = () => {
       alert("Không thể thêm vào giỏ hàng. Vui lòng thử lại.");
     }
   };
-
-  // Lọc sản phẩm theo danh mục đã chọn
-  const filteredProducts = products.filter(product => {
-    if (selectedCategory === 'all') {
-      return true;
-    }
-    return product.category_id.toString() === selectedCategory; 
-  });
 
   return (
     <div className="menu-container">
@@ -140,14 +176,29 @@ const Menu = () => {
         ))}
       </div>
       
+      <div className="search-container">
+        <form onSubmit={handleSearch}>
+          <input 
+            type="text" 
+            placeholder="Tìm kiếm món ăn..." 
+            value={searchKeyword} 
+            onChange={(e) => setSearchKeyword(e.target.value)}
+          />
+          <button type="submit">Tìm kiếm</button>
+          {searchResults && (
+            <button type="button" onClick={clearSearch}>Xóa tìm kiếm</button>
+          )}
+        </form>
+      </div>
+
       {loading ? (
         <div className="loading-indicator">Đang tải dữ liệu...</div>
       ) : (
         <div className="products-grid">
-          {filteredProducts.length === 0 ? (
+          {getDisplayProducts().length === 0 ? (
             <p className="no-products">Không có sản phẩm nào trong danh mục này.</p>
           ) : (
-            filteredProducts.map(product => (
+            getDisplayProducts().map(product => (
               <div className="product-card" key={product.id}>
                 <div className="product-image">
                   <img 
@@ -186,5 +237,4 @@ const Menu = () => {
     </div>
   );
 };
-
 export default Menu;

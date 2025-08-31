@@ -82,6 +82,27 @@ export const categoryService = {
   }
 };
 
+
+  //tim kiem san pham
+  export const searchProducts = async (searchParams) => {
+  try {
+    // Xây dựng query string từ các params
+    const queryParams = new URLSearchParams();
+    
+    if (searchParams.keyword) queryParams.append('keyword', searchParams.keyword);
+    if (searchParams.category_id) queryParams.append('category_id', searchParams.category_id);
+    if (searchParams.min_price) queryParams.append('min_price', searchParams.min_price);
+    if (searchParams.max_price) queryParams.append('max_price', searchParams.max_price);
+    if (searchParams.sort) queryParams.append('sort', searchParams.sort);
+    
+    const response = await api.get(`${API_URL}/products/search?${queryParams.toString()}`);
+    return response.data;
+  } catch (error) {
+    console.error('Lỗi khi tìm kiếm sản phẩm:', error);
+    throw error;
+  }
+};
+
 // Product services
 export const productService = {
   //Get all products
@@ -113,6 +134,9 @@ export const productService = {
     const response = await api.put(`/products/${id}`, productData);
     return response.data;
   },
+
+  //search 
+  searchProducts: searchProducts,
 
   // Delete product
   deleteProduct: async (id) => {
@@ -168,5 +192,9 @@ export const orderService = {
   deleteOrder: async (id) => {
     const response = await api.delete(`/orders/${id}`);
     return response.data;
-  }
+  },
+
+
 };
+
+
