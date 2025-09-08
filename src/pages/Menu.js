@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import api, { productService, categoryService } from '../services/api';
 import '../style/Menu.css';
@@ -13,9 +13,13 @@ const Menu = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [cartCount, setCartCount] = useState(0);
   const [searchKeyword, setSearchKeyword] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchResults, setSearchResults] = useState(null);
   const DEFAULT_IMAGE = "/defaultimage.png";
-  
+  const location = useLocation();
+  useEffect(() => {
+    console.log('searchResults state:', searchResults);
+  }, [searchResults]);
+
   // Cập nhật số lượng sản phẩm trong giỏ hàng
   const updateCartCount = useCallback(async () => {
     if (currentUser) {
@@ -65,6 +69,7 @@ const Menu = () => {
     e.preventDefault();
     if (!searchKeyword.trim()) {
       setSearchResults(null);
+      setError('');
       return;
     }
     
@@ -72,21 +77,42 @@ const Menu = () => {
     try {
       const results = await productService.searchProducts({
         keyword: searchKeyword,
-        category_id: selectedCategory !== 'all' ? selectedCategory : ''
       });
-      setSearchResults(results);
+
+      //kiem tra ket qua tra ve
+      if (Array.isArray(results)) {
+        setSearchResults(results);
+        setSelectedCategory('all');
+        if (results.length === 0) {
+          setError('Không tìm thấy sản phẩm nào phù hợp với từ khóa.');
+        } else {
+          setError('');
+        }
+      } else {
+        setError('Định dạng kết quả tìm kiếm không hợp lệ');
+        setSearchResults([]);
+      }
     } catch (error) {
-      console.error('Lỗi khi tìm kiếm:', error);
-      setError('Không thể tìm kiếm sản phẩm.');
+      console.error("Lỗi khi tìm kiếm:", error);
+      setError('Đã xảy ra lỗi khi tìm kiếm. Vui lòng thử lại.');
+      setSearchResults([]);
     } finally {
       setLoading(false);
     }
   };  
 
+  const handleCategoryClick = (categoryId) => {
+    if (searchResults !== null) {
+      setSearchResults(null);
+      setSearchKeyword('');
+    }
+    setSelectedCategory(categoryId);
+  }
 
   // Sửa lại phần lọc sản phẩm
   const getDisplayProducts = () => {
-    if (searchResults) {
+
+    if (searchResults !== null) {
       return searchResults;
     }
 
@@ -101,6 +127,7 @@ const Menu = () => {
   const clearSearch = () => {
     setSearchKeyword('');
     setSearchResults(null);
+    setError('');
   };
 
   // Format giá tiền
@@ -169,7 +196,7 @@ const Menu = () => {
           <button 
             key={category.id}
             className={`category-btn ${selectedCategory === category.id.toString() ? 'active' : ''}`}
-            onClick={() => setSelectedCategory(category.id.toString())}
+            onClick={() => handleCategoryClick(category.id.toString())}
           >
             {category.name}
           </button>
@@ -190,6 +217,14 @@ const Menu = () => {
           )}
         </form>
       </div>
+      {searchResults !== null &&(
+        <div className="search-results-info">
+          {searchResults.length > 0
+            ? `Tìm thấy ${searchResults.length} kết quả cho "${searchKeyword}"`
+            : `Không tìm thấy kết quả nào cho "${searchKeyword}"`
+          }
+        </div>
+      )}
 
       {loading ? (
         <div className="loading-indicator">Đang tải dữ liệu...</div>

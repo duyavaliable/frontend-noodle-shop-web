@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { productService } from '../services/api';
 import '../style/Dashboard.css';
@@ -10,6 +10,7 @@ const UserDashboard = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [searchKeyword, setSearchKeyword] = useState('');
   const DEFAULT_IMAGE = "/defaultimage.png";
 
   // Xử lý đăng xuất
@@ -37,6 +38,14 @@ const UserDashboard = () => {
       alert("Vui lòng đăng nhập để đặt hàng.");
       navigate('/login');
     }
+  };
+
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    if (!searchKeyword.trim()) {
+      return;
+    }
+    navigate(`/menu?keyword=${encodeURIComponent(searchKeyword)}`);
   };
 
 
@@ -87,11 +96,13 @@ const UserDashboard = () => {
         </div> 
 
         <div className="header-right">
-          <form className="search-bar">
+          <form className="search-bar" onSubmit={handleSearch}>
             <input
               type="text"
               placeholder="Tìm kiếm món ăn..."
               className="search-input"
+              value={searchKeyword}
+              onChange={(e) => setSearchKeyword(e.target.value)}
             />
             <button type="submit" className="search-btn">
               <img src="/searchlogo.png" alt="Tìm kiếm"/>
