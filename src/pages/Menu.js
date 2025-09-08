@@ -16,9 +16,6 @@ const Menu = () => {
   const [searchResults, setSearchResults] = useState(null);
   const DEFAULT_IMAGE = "/defaultimage.png";
   const location = useLocation();
-  useEffect(() => {
-    console.log('searchResults state:', searchResults);
-  }, [searchResults]);
 
   // Cập nhật số lượng sản phẩm trong giỏ hàng
   const updateCartCount = useCallback(async () => {

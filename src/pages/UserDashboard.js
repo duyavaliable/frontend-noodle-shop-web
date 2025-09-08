@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { productService } from '../services/api';
 import '../style/Dashboard.css';
@@ -11,6 +11,7 @@ const UserDashboard = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [loading, setLoading] = useState(true);
   const [searchKeyword, setSearchKeyword] = useState('');
+  const [searchResults, setSearchResults] = useState(null);
   const DEFAULT_IMAGE = "/defaultimage.png";
 
   // Xử lý đăng xuất
@@ -43,12 +44,32 @@ const UserDashboard = () => {
   const handleSearch = async (e) => {
     e.preventDefault();
     if (!searchKeyword.trim()) {
+      setSearchResults(null);
       return;
     }
-    navigate(`/menu?keyword=${encodeURIComponent(searchKeyword)}`);
+    
+    setLoading(true);
+    try {
+      const results = await productService.searchProducts({
+        keyword: searchKeyword,
+      });
+      
+      if (Array.isArray(results)) {
+        setSearchResults(results);
+      } else {
+        setSearchResults([]);
+      }
+    } catch (error) {
+      console.error("Lỗi khi tìm kiếm:", error);
+      setSearchResults([]);
+    } finally {
+      setLoading(false);
+    }
   };
-
-
+  const clearSearch = () => {
+      setSearchKeyword('');
+      setSearchResults(null);
+  };
   // Lấy danh sách sản phẩm khi component được mount 
   //lay 4 san pham bat ki trong co so du lieu
   useEffect(() => {
@@ -97,6 +118,7 @@ const UserDashboard = () => {
 
         <div className="header-right">
           <form className="search-bar" onSubmit={handleSearch}>
+            <div className="search-input-container">
             <input
               type="text"
               placeholder="Tìm kiếm món ăn..."
@@ -104,6 +126,12 @@ const UserDashboard = () => {
               value={searchKeyword}
               onChange={(e) => setSearchKeyword(e.target.value)}
             />
+            {searchKeyword && (
+              <button type="button" className="clear-search-icon" onClick={clearSearch}>
+                &times;
+              </button>
+            )}
+            </div>
             <button type="submit" className="search-btn">
               <img src="/searchlogo.png" alt="Tìm kiếm"/>
             </button> 
@@ -178,45 +206,88 @@ const UserDashboard = () => {
     <div className="content-wrapper">
       <div className="main-content">
         <div className="dashboard-content">
-          <div className="featured-products">
-            <h3>Món ăn nổi bật</h3>
-            <div className="product-grid">
-              {loading ? (
-              <div className="loading-indicator">Đang tải dữ liệu...</div>
-              ) : featuredProducts.length > 0 ? (
-                featuredProducts.map((product) => (
-                  <div className="product-card" key={product.id}>
-                    <div className="product-image">
-                      <img 
-                        src={product.image_url || DEFAULT_IMAGE} 
-                        alt={product.name}
-                        className="product-thumbnail"
-                        onError={(e) => {
-                          e.target.onerror = null;
-                          e.target.src = DEFAULT_IMAGE;
-                        }}
-                      />
+          {searchResults !== null ? (
+            <div className="search-results">
+              <div className="search-results-header">
+                <h3>
+                  {searchResults.length > 0 
+                    ? `Tìm thấy ${searchResults.length} kết quả cho "${searchKeyword}"` 
+                    : `Không tìm thấy kết quả nào cho "${searchKeyword}"`}
+                </h3>
+              </div>
+              
+              <div className="product-grid">
+                {searchResults.length > 0 ? (
+                  searchResults.map((product) => (
+                    <div className="product-card" key={product.id}>
+                      <div className="product-image">
+                        <img 
+                          src={product.image_url || DEFAULT_IMAGE} 
+                          alt={product.name}
+                          className="product-thumbnail"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = DEFAULT_IMAGE;
+                          }}
+                        />
+                      </div>
+                      <h4>{product.name}</h4>
+                      <p className="product-description">
+                        {product.description || 'Không có mô tả'}
+                      </p>
+                      <p className="product-price">{formatPrice(product.price)}</p>
+                      <Link to="/menu" className="view-menu-btn">
+                        Xem thực đơn
+                      </Link>
                     </div>
-                    <h4>{product.name}</h4>
-                    <p className="product-description">
-                      {product.description || 'Không có mô tả'}
-                    </p>
-                    <p className="product-price">{formatPrice(product.price)}</p>
-                    <Link to={currentUser ? "/menu" : "/login"} className="view-menu-btn">
-                      {currentUser ? "Xem thực đơn" : "Đăng nhập để xem"}
-                    </Link>
-                  </div>
-                ))
-              ) : (
-                <p>Không có món ăn nào.</p>
-              )}
+                  ))
+                ) : (
+                  <p>Không có sản phẩm nào phù hợp với từ khóa tìm kiếm.</p>
+                )}
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="featured-products">
+              <h3>Món ăn nổi bật</h3>
+              <div className="product-grid">
+                {loading ? (
+                <div className="loading-indicator">Đang tải dữ liệu...</div>
+                ) : featuredProducts.length > 0 ? (
+                  featuredProducts.map((product) => (
+                    <div className="product-card" key={product.id}>
+                      <div className="product-image">
+                        <img 
+                          src={product.image_url || DEFAULT_IMAGE} 
+                          alt={product.name}
+                          className="product-thumbnail"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = DEFAULT_IMAGE;
+                          }}
+                        />
+                      </div>
+                      <h4>{product.name}</h4>
+                      <p className="product-description">
+                        {product.description || 'Không có mô tả'}
+                      </p>
+                      <p className="product-price">{formatPrice(product.price)}</p>
+                      <Link to={currentUser ? "/menu" : "/login"} className="view-menu-btn">
+                        {currentUser ? "Xem thực đơn" : "Đăng nhập để xem"}
+                      </Link>
+                    </div>
+                  ))
+                ) : (
+                  <p>Không có món ăn nào.</p>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
   </div>
+
   );
-};
+}
 
 export default UserDashboard;
